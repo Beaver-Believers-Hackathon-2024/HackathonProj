@@ -26,7 +26,8 @@ export default function DailyForm() {
   const [dateInput, setDateInput] = useState("");
   const [booleanInput, setBooleanInput] = useState("");
   const [textInput, setTextInput] = useState("");
-
+  const [noButtonVariant, setNoButtonVariant] = useState("text"); //ADDED
+  const [yesButtonVariant, setYesButtonVariant] = useState("text"); //ADDED
   const [userAnswers, setUserAnswers] = useState([]);
 
   const userSex = sessionStorage.sex;
@@ -74,6 +75,8 @@ export default function DailyForm() {
                 : dateInput,
         question: openQuestion.question,
       },
+      setNoButtonVariant("text"),
+      setYesButtonVariant("text"),
     ]);
   };
 
@@ -175,26 +178,36 @@ export default function DailyForm() {
                     ) : openQuestion.inputType === "bool" ? (
                       <>
                         <Button
-                          variant="text"
+                          variant={noButtonVariant}
                           sx={{
                             position: "absolute",
                             bottom: "25%",
                             left: "32%",
                             fontSize: "2rem",
                           }}
-                          onClick={() => setBooleanInput(false)}
+                          onClick={() => {
+                            setBooleanInput(false);
+                            setNoButtonVariant("contained");
+                            setYesButtonVariant("text");
+
+                          }}
                         >
                           No
                         </Button>
                         <Button
-                          variant="text"
+                          variant={yesButtonVariant}
                           sx={{
                             position: "absolute",
                             bottom: "25%",
                             right: "32%",
                             fontSize: "2rem",
                           }}
-                          onClick={() => setBooleanInput(true)}
+                          onClick={() => {
+                            setBooleanInput(true);
+                            setNoButtonVariant("text");
+                            setYesButtonVariant("contained");
+
+                          }}
                         >
                           Yes
                         </Button>
