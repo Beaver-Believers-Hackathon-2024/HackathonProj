@@ -5,6 +5,7 @@ import "./App.css";
 // page imports
 import Login from "./pages/Login";
 import DailyForm from './pages/dailyForm'
+import Dashboard from './pages/dashboard'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path='/dailyForm' element={<DailyForm />}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
       </Routes>
     </>
   );

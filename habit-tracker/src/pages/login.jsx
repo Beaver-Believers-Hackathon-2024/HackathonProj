@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import {Typography, Divider, Link, Grid, TextField, Button} from "@mui/material";
-import {createUser} from '../firebase/DatabaseCalls'
-import { auth } from '../firebase/FirebaseConfig'
+
+import { useNavigate } from "react-router";
 
 // db function calls
 
 export default function login() {
+  const navigate = useNavigate();
   return <>
     <Grid container spacing={2}>
       <Grid xs={12}>
@@ -23,7 +24,7 @@ export default function login() {
     <TextField id="outlined-basic" label="PASSWORD" variant="outlined" /><br /><br />
     <Button
       onClick={() => {
-        alert('clicked'); //CHANGE IT TO NAVIGATE FURTHER!
+        navigate('/dashboard');
       }}
     >
       Sign In
