@@ -9,13 +9,28 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { createUser } from "../firebase/DatabaseCalls";
+
+import { login } from "../firebase/DatabaseCalls";
 import { auth } from "../firebase/FirebaseConfig";
 
 // db function calls
 
 export default function Login() {
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
   const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    login(emailInput, passwordInput).then((result) => {
+      if (result == true) {
+        navigate("/dashboard");
+      } else {
+        console.log("input errors");
+      }
+    });
+  };
 
   return (
     <>
@@ -39,13 +54,23 @@ export default function Login() {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <TextField id="outlined-basic" label="EMAIL" variant="outlined" />
+          <TextField
+            id="outlined-basic"
+            label="EMAIL"
+            variant="outlined"
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField id="outlined-basic" label="PASSWORD" variant="outlined" />
+          <TextField
+            id="outlined-basic"
+            label="PASSWORD"
+            variant="outlined"
+            onChange={(e) => setPasswordInput(e.target.value)}
+          />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" onClick={() => {}}>
+          <Button variant="contained" onClick={(e) => handleLogin(e)}>
             Sign In
           </Button>
         </Grid>

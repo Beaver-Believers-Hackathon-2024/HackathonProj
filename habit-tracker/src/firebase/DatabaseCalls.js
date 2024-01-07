@@ -30,15 +30,18 @@ export async function writeNewUserData(email, username, uid, sex, occupation) {
     })
 }
 
-export async function login(auth, email, password) {
-    signInWithEmailAndPassword(auth, email, password)
+export async function login(email, password) {
+    let result = false;
+    await signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
+            sessionStorage.setItem('currentUserUID', userCredential.user.uid);
+            result = true;
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            console.log(error.code);
+            console.log(error.message);
         });
+    return (result)
 }
 export async function logged_in(auth, user) {
     const navigate = useNavigate();
