@@ -1,89 +1,28 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  Typography,
-  Divider,
-  Link,
-  Grid,
-  TextField,
-  Button,
-} from "@mui/material";
-
-import { login } from "../firebase/DatabaseCalls";
-import { auth } from "../firebase/FirebaseConfig";
+import {createUser} from '../firebase/DatabaseCalls'
+import { auth } from '../firebase/FirebaseConfig'
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 // db function calls
 
-export default function Login() {
-  const [emailInput, setEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const navigate = useNavigate();
+export default function login() {
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    login(emailInput, passwordInput).then((result) => {
-      if (result == true) {
-        navigate("/dashboard");
-      } else {
-        console.log("input errors");
-      }
-    });
-  };
-
+  <button onClick={createUser}> Create Account</button>
   return (
-    <>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={6}>
-          <Typography variant="h4" component="h2" color="primary">
-            WELCOME
-          </Typography>
-          <Typography variant="h5" component="h2" color="primary">
-            TO
-          </Typography>
-          <Typography variant="h4" component="h2" color="primary">
-            STRIVE
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container justifyContent="center">
-            <Grid item xs={2}>
-              <Divider orientation="horizontal" flexItem />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="EMAIL"
-            variant="outlined"
-            onChange={(e) => setEmailInput(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="PASSWORD"
-            variant="outlined"
-            onChange={(e) => setPasswordInput(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" onClick={(e) => handleLogin(e)}>
-            Sign In
-          </Button>
-        </Grid>
-        <Grid item xs={8}>
-          <Button
-            onClick={() => {
-              navigate("/signup");
-            }}
-          >
-            Don't have an account? Sign Up
-          </Button>
-        </Grid>
-      </Grid>
-    </>
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+      <TextField id="filled-basic" label="Filled" variant="filled" />
+      <TextField id="standard-basic" label="Standard" variant="standard" />
+    </Box>
   );
 }
