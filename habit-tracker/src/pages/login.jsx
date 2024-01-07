@@ -6,14 +6,20 @@ import {
   Grid,
   TextField,
   Button,
-  Box,
+  Paper,
 } from "@mui/material";
 import { login } from "../firebase/DatabaseCalls";
+import { auth } from "../firebase/FirebaseConfig";
+import { green } from "@mui/material/colors";
+
+// db function calls
 
 export default function Login() {
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const navigate = useNavigate();
+  const headerStyle = {display: "inline-flex", position: "fixed", top: 0, right: 30};
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -28,76 +34,73 @@ export default function Login() {
   };
 
   return (
-    <Box
-      sx={{
-        backgroundImage:
-          'url(https://media.istockphoto.com/id/1419410282/photo/silent-forest-in-spring-with-beautiful-bright-sun-rays.jpg?s=612x612&w=0&k=20&c=UHeb1pGOw6ozr6utsenXHhV19vW6oiPIxDqhKCS2Llk=)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        minHeight: "60vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: '15px',
-      }}
-    >
-      <Box
-        sx={{
-          height: "90vh",
-          backgroundColor: "#ffffff",
-          padding: 3,
-          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-          width: "70%",
-          maxWidth: "375px", // Set a maximum width for the white box
-          margin: "auto", // Center the white box horizontally
-          alignItems: "center",
-justifyContent: "center",
-        }}
-      >
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12}>
-            <Typography variant="h2" color="primary">
-              STRIVE
-              <Divider orientation="horizontal" flexItem sx={{ mx: 1 }} />
-              WELCOME
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="EMAIL"
-              variant="outlined"
-              fullWidth
-              onChange={(e) => setEmailInput(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="PASSWORD"
-              variant="outlined"
-              fullWidth
-              onChange={(e) => setPasswordInput(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={(e) => handleLogin(e)}>
-              Sign In
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              fullWidth
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              Don't have an account? Sign Up
-            </Button>
+    
+    <>
+    <div className="header" style={headerStyle}>
+          <Button style={{fontWeight: "bold", fontFamily: "Arial"}}
+          onClick={()=>{
+              navigate("/ALogin")
+          }}
+          >Accessibility OFF</Button>
+        </div>
+
+    <Paper style={{border: '2px solid lightBlue', width: "fit-content", alignContent:"center", paddingTop: "10%", paddingBottom: "15%" }}>
+      <Grid container spacing={2} justifyContent="center">
+        
+        <Grid item xs={6}>
+          <Typography style={{ fontFamily: 'Arial', fontWeight:'bold'}} variant="h4" component="h2" color="primary">
+            WELCOME
+          </Typography>
+          <Typography variant="h5" component="h2" color="primary">
+            TO
+          </Typography>
+          <Typography variant="h4" component="h2" color="primary">
+            STRIVE
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container justifyContent="center">
+            <Grid item xs={2}>
+              <Divider orientation="horizontal" flexItem />
+            </Grid>
           </Grid>
         </Grid>
-      </Box>
-    </Box>
+        <Grid item xs={12}>
+          <TextField
+            id="outlined-basic"
+            label="EMAIL"
+            variant="outlined"
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            id="outlined-basic"
+            label="PASSWORD"
+            variant="outlined"
+            margin="normal"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            onChange={(e) => setPasswordInput(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button variant="contained" onClick={(e) => handleLogin(e)}>
+            Sign In
+          </Button>
+        </Grid>
+        <Grid item xs={8}>
+          <Button style={{ fontFamily: 'Calibri', fontWeight:'bold'}}
+            onClick={() => {
+              navigate("/signup");
+            }}
+          > 
+            Don't have an account? Sign Up
+          </Button>
+        </Grid>
+      </Grid>
+      </Paper>
+  </>
   );
 }
