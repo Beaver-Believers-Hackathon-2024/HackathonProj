@@ -4,13 +4,6 @@ import { collection, addDoc, getDoc } from 'firebase/firestore'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import formQuestions from '../data/formData';
 
-const navigate = useNavigate();
-
-// test call to see if firebase is setup properly
-export async function addTestUser() {
-    console.log('test db')
-    await addDoc(collection(db, 'users'), { userName: 'test2', uid: 'test2222' })
-}
 // create user
 export async function createUser(email, password, username, sex, occupation) {
     let result = false;
