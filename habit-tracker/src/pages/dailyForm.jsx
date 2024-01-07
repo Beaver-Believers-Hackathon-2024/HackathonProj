@@ -7,10 +7,10 @@ import {
   Card,
   CardActions,
   CardContent,
-  Grid,
   Button,
   TextField,
   Slider,
+  Grid,
 } from "@mui/material";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import ArrowForward from "@mui/icons-material/ArrowForward";
@@ -143,27 +143,103 @@ export default function DailyForm() {
   }, [userAnswers]);
 
   return (
-    <>
-      <Container sx={{ backgroundColor: "#ffffff" }}>
-        <Grid container justifyContent="center" style={{ height: "100%" }}>
-          <Grid item xs={12} style={{ height: "100%" }}>
-            <Grid container style={{ height: "100%" }}>
-              <Grid item xs={12} style={{ height: "100%" }}>
-                <Card
+    <Container sx={{ backgroundColor: "#ffffff" }}>
+      <Grid container justifyContent="center" style={{ height: "100%" }}>
+        <Grid item xs={12} style={{ height: "100%" }}>
+          <Grid container style={{ height: "100%" }}>
+            <Grid item xs={12} style={{ height: "100%" }}>
+              <Card
+                sx={{
+                  minWidth: "275px",
+                  height: "350px",
+                  width: "450px",
+                  position: "relative",
+                }}
+              >
+                <CardContent
                   sx={{
-                    minWidth: "275px",
-                    height: "350px",
-                    width: "450px",
-                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center", // Center the content horizontally
+                    height: "70%",
                   }}
                 >
-                  <CardContent
+                  <Typography sx={{ fontSize: "2rem" }}>
+                    {openQuestion !== undefined ? openQuestion.question : ""}
+                  </Typography>
+                  {openQuestion.inputType === "dateTime" ? (
+                    <input
+                      type="time"
+                      style={{ marginTop: "30px", fontSize: "2rem" }}
+                      onChange={(e) => setDateInput(e.target.value)}
+                    ></input>
+                  ) : openQuestion.inputType === "bool" ? (
+                    <>
+                      <Button
+                        variant="text"
+                        sx={{
+                          position: "absolute",
+                          bottom: "25%",
+                          left: "32%",
+                          fontSize: "2rem",
+                        }}
+                        onClick={() => setBooleanInput(false)}
+                      >
+                        No
+                      </Button>
+                      <Button
+                        variant="text"
+                        sx={{
+                          position: "absolute",
+                          bottom: "25%",
+                          right: "32%",
+                          fontSize: "2rem",
+                        }}
+                        onClick={() => setBooleanInput(true)}
+                      >
+                        Yes
+                      </Button>
+                    </>
+                  ) : openQuestion.inputType === "text" ? (
+                    <>
+                      <TextField
+                        type="text"
+                        sx={{
+                          position: "absolute",
+                          bottom: "25%",
+                          fontSize: "2rem",
+                        }}
+                        onChange={(e) => setTextInput(e.target.value)}
+                      ></TextField>
+                    </>
+                  ) : openQuestion.inputType === "slider" ? (
+                    <>
+                      <Slider
+                        value={parseInt(textInput, 10) || 0}
+                        onChange={(e, value) => setTextInput(value.toString())}
+                        min={1}
+                        max={10}
+                        step={1}
+                        style={{ width: "80%", marginTop: "30px" }}
+                      />
+                      <Typography sx={{ fontSize: "2rem", marginTop: "10px" }}>
+                        {textInput}
+                      </Typography>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <CardActions
                     sx={{
+                      position: "absolute",
+                      top: "75%",
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
                       display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center", // Center the content horizontally
-                      height: "70%",
+                      justifyContent: "space-between",
+                      padding: "12px",
                     }}
                   >
                     <Typography sx={{ fontSize: "2rem" }}>
@@ -256,22 +332,22 @@ export default function DailyForm() {
                         justifyContent: "space-between",
                         padding: "12px",
                       }}
+
+                    <Button
+                      size="small"
+                      onClick={() => handleNextQuestion()}
+                      sx={{ fontSize: "2rem", margin: "0 auto" }}
+
                     >
-                      <Button
-                        size="small"
-                        onClick={() => handleNextQuestion()}
-                        sx={{ fontSize: "2rem", margin: "0 auto" }}
-                      >
-                        <ArrowForward />
-                      </Button>
-                    </CardActions>
-                  </CardContent>
-                </Card>
-              </Grid>
+                      <ArrowForward />
+                    </Button>
+                  </CardActions>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
         </Grid>
-      </Container>
-    </>
+      </Grid>
+    </Container>
   );
 }

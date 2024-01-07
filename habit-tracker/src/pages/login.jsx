@@ -1,16 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import {
   Typography,
   Divider,
-  Link,
   Grid,
   TextField,
   Button,
   Paper,
 } from "@mui/material";
-
 import { login } from "../firebase/DatabaseCalls";
 import { auth } from "../firebase/FirebaseConfig";
 import { green } from "@mui/material/colors";
@@ -28,7 +25,7 @@ export default function Login() {
     e.preventDefault();
 
     login(emailInput, passwordInput).then((result) => {
-      if (result == true) {
+      if (result === true) {
         navigate("/dashboard");
       } else {
         console.log("input errors");

@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 import { db, auth } from '../firebase/FirebaseConfig'
-import { collection, addDoc, getDoc, doc } from 'firebase/firestore'
+import { collection, addDoc, getDoc, getDocs, doc, query, orderBy, limit, where } from 'firebase/firestore'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import formQuestions from '../data/formData';
 
@@ -45,6 +45,23 @@ export async function login(email, password) {
             console.log(error.message);
         });
     return (result);
+}
+
+export async function getMostRecentCompletedForm(uid) {
+    const querySnapshot = await getDocs(
+        query(
+            collection(db, 'completedForms'),
+            orderBy('dateCompleted', 'desc'),
+            where('uid', '==', uid),
+            limit(1)
+        )
+    )
+    let completedForm;
+    querySnapshot.forEach((doc) => {
+        console.log('data: ', doc.data())
+        completedForm = doc.data()
+    })
+    return completedForm;
 }
 
 export async function getUsersData(uid) {
