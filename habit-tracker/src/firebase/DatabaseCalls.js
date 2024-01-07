@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
-import { db } from '../firebase/FirebaseConfig'
+import { db, auth } from '../firebase/FirebaseConfig'
 import { collection, addDoc, getDoc } from 'firebase/firestore'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import formQuestions from '../data/formData';

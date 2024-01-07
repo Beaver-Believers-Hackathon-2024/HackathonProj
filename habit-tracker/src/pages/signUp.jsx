@@ -23,8 +23,8 @@ export default function SignUp() {
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [usernameInput, setUsernameInput] = useState("");
-  const [sexInput, setSexInput] = useState("");
-  const [occupationInput, setOccupationInput] = useState("");
+  const [sexInput, setSexInput] = useState("female");
+  const [occupationInput, setOccupationInput] = useState("student");
 
   const navigate = useNavigate();
 
