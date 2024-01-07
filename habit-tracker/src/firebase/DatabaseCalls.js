@@ -11,6 +11,8 @@ export async function createUser(email, password, username, sex, occupation) {
         .then((userCredential) => {
             // Signed up 
             sessionStorage.setItem('currentUserUID', userCredential.user.uid);
+            sessionStorage.setItem('sex', sex)
+            sessionStorage.setItem('occupation', occupation)
             writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation)
             result = true
         })
