@@ -11,6 +11,8 @@ export async function createUser(email, password, username, sex, occupation) {
         .then((userCredential) => {
             // Signed up 
             sessionStorage.setItem('currentUserUID', userCredential.user.uid);
+            sessionStorage.setItem('sex', sex)
+            sessionStorage.setItem('occupation', occupation)
             writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation)
             result = true
         })
@@ -82,3 +84,13 @@ export async function get_User_Data(user, date) {
 
 }
 
+export async function writeCompletedForm(uid,userAnswers, dateCompleted) {
+    let result=false;
+    await addDoc(collection(db, 'completedForms'), { uid:uid, completedForm: userAnswers, dateCompleted: dateCompleted }).then(() => {
+        console.log("completedFormWritten!!")
+        result = true;
+    }).catch((err) => {
+        console.log(err);
+    })
+    return result;
+}
