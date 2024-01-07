@@ -5,13 +5,15 @@ import "./App.css";
 // page imports
 import Login from "./pages/Login";
 import DailyForm from "./pages/dailyForm";
+import SignUp from "./pages/signUp";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dailyForm" element={<DailyForm />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dailyform" element={<DailyForm />} />
       </Routes>
     </>
   );
