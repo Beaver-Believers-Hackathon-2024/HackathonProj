@@ -17,18 +17,18 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import formData from "../data/formData";
 
 export default function DailyForm() {
-  const [questionCount, setQuestionCount] = useState(1);
+  const [questionCount, setQuestionCount] = useState(0);
 
   const handleNextQuestion = () => {
     if (questionCount < formData.length - 1) {
       setQuestionCount(questionCount + 1);
     } else {
-      setQuestionCount(1);
+      setQuestionCount(0);
     }
   };
 
   const handlePreviousQuestion = () => {
-    if (questionCount > 1) {
+    if (questionCount > 0) {
       setQuestionCount(questionCount - 1);
     } else {
       setQuestionCount(formData.length - 1);
