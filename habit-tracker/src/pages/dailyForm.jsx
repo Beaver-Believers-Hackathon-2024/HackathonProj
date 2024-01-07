@@ -242,15 +242,8 @@ export default function DailyForm() {
                     >
                       <Button
                         size="small"
-                        onClick={() => handlePreviousQuestion()}
-                        sx={{ fontSize: "2rem" }}
-                      >
-                        <ArrowBack />
-                      </Button>
-                      <Button
-                        size="small"
                         onClick={() => handleNextQuestion()}
-                        sx={{ fontSize: "2rem" }}
+                        sx={{ fontSize: "2rem", margin: "0 auto" }}
                       >
                         <ArrowForward />
                       </Button>

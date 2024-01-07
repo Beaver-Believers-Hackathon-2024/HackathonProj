@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import ALogin from "./pages/ALogin";
 import DailyForm from "./pages/dailyForm";
 import SignUp from "./pages/signUp";
-import ADailyForm from "./pages/AdailyForm"
+import Dashboard from "./pages/dashboard";
 
 function App() {
   return (
@@ -17,9 +17,7 @@ function App() {
         <Route path="/Alogin" element={<ALogin />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dailyform" element={<DailyForm />} />
-        <Route path="/Adailyform" element={<ADailyForm />} />
-
-
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </>
   );
