@@ -1,38 +1,47 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
-import { db } from '../firebase/FirebaseConfig'
+import { db, auth } from '../firebase/FirebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, } from "react-router-dom";
 
 // test call to see if firebase is setup properly
-export async function addTestUser() {
-    console.log('test db')
-    await addDoc(collection(db, 'users'), { userName: 'test2', uid: 'test2222' })
-}
+
 // create user
-export async function createUser(auth, email, password) {
-    createUserWithEmailAndPassword(auth, email, password)
+export async function createUser(email, password, username, sex, occupation) {
+    let result = false;
+    await createUserWithEmailAndPassword(auth, email, password, username, sex, occupation)
         .then((userCredential) => {
             // Signed up 
-            const user = userCredential.user;
-            const email = userCredential.email;
-            const password = userCredential.password;
-
+            sessionStorage.setItem('currentUserUID', userCredential.user.uid);
+            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation)
+            result = true
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
+            console.log(error.code);
+            console.log(error.message);
         });
+    return (result)
 }
-export async function login(auth, email, password) {
-    signInWithEmailAndPassword(auth, email, password)
+
+export async function writeNewUserData(email, username, uid, sex, occupation) {
+    await addDoc(collection(db, 'users'), { email: email, userName: username, uid: uid, sex: sex, occupation: occupation }).then(() => {
+        console.log('user added')
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+export async function login(email, password) {
+    let result = false;
+    await signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
+            sessionStorage.setItem('currentUserUID', userCredential.user.uid);
+            result = true;
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            console.log(error.code);
+            console.log(error.message);
         });
+    return (result)
 }
 export async function logged_in(auth, user) {
     const navigate = useNavigate();
