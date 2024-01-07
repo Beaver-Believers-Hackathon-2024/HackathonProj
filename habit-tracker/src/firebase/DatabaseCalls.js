@@ -89,3 +89,14 @@ export async function get_User_Data(user, date) {
 
 }
 
+export async function getCompletedForms(user){
+    // const uid = user.uid;
+    const uid = "wf1SHu3mStdnIfFiZ5fROGMGDK72";
+    const usersDocRef = doc(db, 'completedForms', uid);
+    try {
+        data = await getDoc(usersDocRef);
+        return data;
+    } catch (error) {
+        console.log("Can't retrieve form data");
+    }
+}
