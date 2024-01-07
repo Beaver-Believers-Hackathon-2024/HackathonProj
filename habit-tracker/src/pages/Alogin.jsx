@@ -42,22 +42,22 @@ export default function Login() {
     <div className="header" style={headerStyle}>
           <Button style={{fontWeight: "bold", fontFamily: "Arial"}}
           onClick={()=>{
-              navigate("/ALogin")
+              navigate("/")
           }}
-          >Accessibility OFF</Button>
+          >Accessibility ON</Button>
         </div>
 
-    <Paper style={{border: '2px solid lightBlue', width: "fit-content", alignContent:"center", paddingTop: "10%", paddingBottom: "15%" }}>
+    <Paper style={{border: '2px solid lightBlue', width: "fit-content", alignContent:"center", paddingTop: "8%", paddingBottom: "8%" }}>
       <Grid container spacing={2} justifyContent="center">
         
         <Grid item xs={6}>
-          <Typography style={{ fontFamily: 'Arial', fontWeight:'bold'}} variant="h4" component="h2" color="primary">
+          <Typography style={{ fontFamily: 'Arial', fontWeight:'bold'}} variant="h3" component="h1" color="primary">
             WELCOME
           </Typography>
-          <Typography variant="h5" component="h2" color="primary">
+          <Typography variant="h4" component="h1" color="primary">
             TO
           </Typography>
-          <Typography variant="h4" component="h2" color="primary">
+          <Typography variant="h3" component="h1" color="primary">
             STRIVE
           </Typography>
         </Grid>
@@ -90,7 +90,7 @@ export default function Login() {
           </Button>
         </Grid>
         <Grid item xs={8}>
-          <Button style={{ fontFamily: 'Calibri', fontWeight:'bold'}}
+          <Button style={{ fontFamily: 'Calibri', fontWeight:'bold', fontSize:"150%"}}
             onClick={() => {
               navigate("/signup");
             }}
