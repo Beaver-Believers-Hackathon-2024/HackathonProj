@@ -104,7 +104,7 @@ export default function DailyForm() {
   };
 
   const handlePreviousQuestion = () => {
-    if (questionCount > 1) {
+    if (questionCount > 0) {
       setQuestionCount(questionCount - 1);
     } else {
       setQuestionCount(formData.length - 1);

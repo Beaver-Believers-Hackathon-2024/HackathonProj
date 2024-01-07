@@ -66,6 +66,10 @@ export default function Login() {
             id="outlined-basic"
             label="PASSWORD"
             variant="outlined"
+            margin="normal"
+            name="password"
+            type="password"
+            autoComplete="current-password"
             onChange={(e) => setPasswordInput(e.target.value)}
           />
         </Grid>
