@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../firebase/FirebaseConfig'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, getDoc } from 'firebase/firestore'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 // test call to see if firebase is setup properly
@@ -16,7 +16,6 @@ export async function createUser(auth, email, password) {
             const user = userCredential.user;
             const email = userCredential.email;
             const password = userCredential.password;
-
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -50,4 +49,14 @@ export async function logged_in(auth, user) {
             // ...
         }
     });
+}
+export async function get_User_Data(user, date){
+  const userDocRef = doc(db, 'users', user, date);
+  try {
+    data = await getDoc(userDocRef);
+    return data;
+  } catch (error){
+    console.log("broke");
+  }
+
 }
