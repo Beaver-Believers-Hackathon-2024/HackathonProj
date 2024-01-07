@@ -26,8 +26,7 @@ export default function DailyForm() {
   const [dateInput, setDateInput] = useState("");
   const [booleanInput, setBooleanInput] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [noButtonVariant, setNoButtonVariant] = useState("text"); //ADDED
-  const [yesButtonVariant, setYesButtonVariant] = useState("text"); //ADDED
+
   const [userAnswers, setUserAnswers] = useState([]);
 
   const userSex = sessionStorage.sex;
@@ -75,8 +74,6 @@ export default function DailyForm() {
                 : dateInput,
         question: openQuestion.question,
       },
-      setNoButtonVariant("text"),
-      setYesButtonVariant("text"),
     ]);
   };
 
@@ -242,102 +239,10 @@ export default function DailyForm() {
                       padding: "12px",
                     }}
                   >
-                    <Typography sx={{ fontSize: "2rem" }}>
-                      {openQuestion !== undefined ? openQuestion.question : ""}
-                    </Typography>
-                    {openQuestion.inputType === "dateTime" ? (
-                      <input
-                        type="time"
-                        style={{ marginTop: "30px", fontSize: "2rem" }}
-                        onChange={(e) => setDateInput(e.target.value)}
-                      ></input>
-                    ) : openQuestion.inputType === "bool" ? (
-                      <>
-                        <Button
-                          variant={noButtonVariant}
-                          sx={{
-                            position: "absolute",
-                            bottom: "25%",
-                            left: "32%",
-                            fontSize: "2rem",
-                          }}
-                          onClick={() => {
-                            setBooleanInput(false);
-                            setNoButtonVariant("contained");
-                            setYesButtonVariant("text");
-
-                          }}
-                        >
-                          No
-                        </Button>
-                        <Button
-                          variant={yesButtonVariant}
-                          sx={{
-                            position: "absolute",
-                            bottom: "25%",
-                            right: "32%",
-                            fontSize: "2rem",
-                          }}
-                          onClick={() => {
-                            setBooleanInput(true);
-                            setNoButtonVariant("text");
-                            setYesButtonVariant("contained");
-
-                          }}
-                        >
-                          Yes
-                        </Button>
-                      </>
-                    ) : openQuestion.inputType === "text" ? (
-                      <>
-                        <TextField
-                          type="text"
-                          sx={{
-                            position: "absolute",
-                            bottom: "25%",
-                            fontSize: "2rem",
-                          }}
-                          onChange={(e) => setTextInput(e.target.value)}
-                        ></TextField>
-                      </>
-                    ) : openQuestion.inputType === "slider" ? (
-                      <>
-                        <Slider
-                          value={parseInt(textInput, 10) || 0}
-                          onChange={(e, value) =>
-                            setTextInput(value.toString())
-                          }
-                          min={1}
-                          max={10}
-                          step={1}
-                          style={{ width: "80%", marginTop: "30px" }}
-                        />
-                        <Typography
-                          sx={{ fontSize: "2rem", marginTop: "10px" }}
-                        >
-                          {textInput}
-                        </Typography>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                    <CardActions
-                      sx={{
-                        position: "absolute",
-                        top: "75%",
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "12px",
-                      }}
-
                     <Button
                       size="small"
                       onClick={() => handleNextQuestion()}
                       sx={{ fontSize: "2rem", margin: "0 auto" }}
-
                     >
                       <ArrowForward />
                     </Button>
