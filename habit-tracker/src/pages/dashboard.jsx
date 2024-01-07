@@ -38,7 +38,13 @@ export default function dashboard() {
       </div>
 
       <div className="greetings" style={greetingsStyle}>
-        <Typography variant="h2">Hello, User.</Typography>
+        <Typography variant="h2">
+          Hello,{" "}
+          {sessionStorage.username !== undefined
+            ? sessionStorage.username
+            : "User"}
+          .
+        </Typography>
         <Typography variant="body1">
           Let's see some of your recent data.
         </Typography>
