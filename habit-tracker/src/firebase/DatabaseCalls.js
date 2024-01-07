@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 import { db, auth } from '../firebase/FirebaseConfig'
-import { collection, addDoc, getDoc } from 'firebase/firestore'
+import { collection, addDoc, getDoc, getDocs, doc, query, orderBy, limit, where } from 'firebase/firestore'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import formQuestions from '../data/formData';
 
@@ -11,8 +11,11 @@ export async function createUser(email, password, username, sex, occupation) {
         .then((userCredential) => {
             // Signed up 
             sessionStorage.setItem('currentUserUID', userCredential.user.uid);
-            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation)
-            result = true
+            sessionStorage.setItem('sex', sex);
+            sessionStorage.setItem('occupation', occupation);
+            sessionStorage.setItem('username', username);
+            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation);
+            result = true;
         })
         .catch((error) => {
             console.log(error.code);
@@ -32,15 +35,40 @@ export async function writeNewUserData(email, username, uid, sex, occupation) {
 export async function login(email, password) {
     let result = false;
     await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
             sessionStorage.setItem('currentUserUID', userCredential.user.uid);
+            await getUsersData(userCredential.user.uid)
             result = true;
         })
         .catch((error) => {
             console.log(error.code);
             console.log(error.message);
         });
-    return (result)
+    return (result);
+}
+
+export async function getMostRecentCompletedForm(uid) {
+    const querySnapshot = await getDocs(
+        query(
+            collection(db, 'completedForms'),
+            orderBy('dateCompleted', 'desc'),
+            where('uid', '==', uid),
+            limit(1)
+        )
+    )
+    let completedForm;
+    querySnapshot.forEach((doc) => {
+        console.log('data: ', doc.data())
+        completedForm = doc.data()
+    })
+    return completedForm;
+}
+
+export async function getUsersData(uid) {
+    let userSnapShot = await getDoc(doc(db, 'users', uid));
+    if (userSnapShot.exists()) {
+        sessionStorage.setItem('username', userSnapShot.data().userName)
+    }
 }
 
 export async function logged_in(auth, user) {
@@ -49,14 +77,15 @@ export async function logged_in(auth, user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
-            navigate('/dailyForm');
-            // ...
+            get_User_Data()
         } else {
             // User is signed out
-            navigate('/login');
         }
     });
 }
+
+
+
 export async function get_User() {
     const user = auth.currentUser;
     return user;
@@ -71,14 +100,13 @@ export async function log_Out() {
     }
 }
 
-export async function get_User_Data(user, date) {
-    const userDocRef = doc(db, 'users', user, date);
-    try {
-        data = await getDoc(userDocRef);
-        return data;
-    } catch (error) {
-        console.log("broke");
-    }
-
+export async function writeCompletedForm(uid, userAnswers, dateCompleted) {
+    let result = false;
+    await addDoc(collection(db, 'completedForms'), { uid: uid, completedForm: userAnswers, dateCompleted: dateCompleted }).then(() => {
+        console.log("completedFormWritten!!")
+        result = true;
+    }).catch((err) => {
+        console.log(err);
+    })
+    return result;
 }
-
