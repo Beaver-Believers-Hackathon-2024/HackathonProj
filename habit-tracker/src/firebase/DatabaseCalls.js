@@ -11,8 +11,10 @@ export async function createUser(email, password, username, sex, occupation) {
         .then((userCredential) => {
             // Signed up 
             sessionStorage.setItem('currentUserUID', userCredential.user.uid);
-            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation);
-            result = true;
+            sessionStorage.setItem('sex', sex)
+            sessionStorage.setItem('occupation', occupation)
+            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation)
+            result = true
         })
         .catch((error) => {
             console.log(error.code);
