@@ -46,17 +46,15 @@ export default function DailyForm() {
     });
   }, []);
 
+  useEffect(() => {
     if (questionCount > 0) {
       setFollowUpUsed(false);
       setOpenQuestion(formData[questionCount]);
     }
-  }, [questionCount]);
-
-  useEffect(() => {
-    if (openQuestion.inputType === 'slider') {
-      setTextInput('5'); // Set the initial value for the slider (e.g., 5)
+    if (openQuestion.inputType === "slider") {
+      setTextInput("5"); // Set the initial value for the slider (e.g., 5)
     }
-  }, [openQuestion]);
+  }, [questionCount]);
 
   useEffect(() => {
     console.log(userAnswers);
@@ -71,7 +69,9 @@ export default function DailyForm() {
             ? booleanInput
             : openQuestion.inputType == "text"
               ? textInput
-              : dateInput,
+              : openQuestion.inputType == "slider"
+                ? textInput
+                : dateInput,
         question: openQuestion.question,
       },
     ]);
@@ -211,23 +211,27 @@ export default function DailyForm() {
                           onChange={(e) => setTextInput(e.target.value)}
                         ></TextField>
                       </>
-                    ) : openQuestion.inputType === 'slider' ? (
-                        <>
-                          <Slider
-                            value={parseInt(textInput, 10) || 0}
-                            onChange={(e, value) => setTextInput(value.toString())}
-                            min={1}
-                            max={10}
-                            step={1}
-                            style={{ width: '80%', marginTop: '30px' }}
-                          />
-                          <Typography sx={{ fontSize: '2rem', marginTop: '10px' }}>
-                            {textInput}
-                          </Typography>
-                        </>
-                      ) : (
-                        ''
-                      )}
+                    ) : openQuestion.inputType === "slider" ? (
+                      <>
+                        <Slider
+                          value={parseInt(textInput, 10) || 0}
+                          onChange={(e, value) =>
+                            setTextInput(value.toString())
+                          }
+                          min={1}
+                          max={10}
+                          step={1}
+                          style={{ width: "80%", marginTop: "30px" }}
+                        />
+                        <Typography
+                          sx={{ fontSize: "2rem", marginTop: "10px" }}
+                        >
+                          {textInput}
+                        </Typography>
+                      </>
+                    ) : (
+                      ""
+                    )}
                     <CardActions
                       sx={{
                         position: "absolute",
