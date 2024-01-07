@@ -84,3 +84,13 @@ export async function get_User_Data(user, date) {
 
 }
 
+export async function writeCompletedForm(uid,userAnswers, dateCompleted) {
+    let result=false;
+    await addDoc(collection(db, 'completedForms'), { uid:uid, completedForm: userAnswers, dateCompleted: dateCompleted }).then(() => {
+        console.log("completedFormWritten!!")
+        result = true;
+    }).catch((err) => {
+        console.log(err);
+    })
+    return result;
+}

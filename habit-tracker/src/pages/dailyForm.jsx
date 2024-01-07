@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import ArrowForward from "@mui/icons-material/ArrowForward";
+import { writeCompletedForm } from "../firebase/DatabaseCalls";
 
 // data
 import formData from "../data/formData";
@@ -20,9 +22,18 @@ export default function DailyForm() {
   const [questionCount, setQuestionCount] = useState(0);
   const [openQuestion, setOpenQuestion] = useState(formData[questionCount]);
   const [followUpUsed, setFollowUpUsed] = useState(false);
+  const [dateInput, setDateInput] = useState("");
+  const [booleanInput, setBooleanInput] = useState('');
+  const [textInput, setTextInput] = useState("");
+  const [firstQuestionAnswered, setFirstQuestionAnswered] = useState(false);
+
+  const [userAnswers, setUserAnswers] = useState([]);
 
   const userSex = sessionStorage.sex;
   const userOccupation = sessionStorage.occupation;
+
+  const navigate = useNavigate()
+
 
   useEffect(() => {
     // on render remove all not needed questions
@@ -38,28 +49,57 @@ export default function DailyForm() {
 
   useEffect(() => {
     setFollowUpUsed(false);
+    // ADD USER ANSWERS TO ARRAY!
+    if (firstQuestionAnswered) {
+      setUserAnswers([...userAnswers,{answer: openQuestion.inputType=="bool" ? booleanInput : openQuestion.inputType=="text" ? textInput: dateInput, question:openQuestion.question}])
+    }
     setOpenQuestion(formData[questionCount]);
+    setFirstQuestionAnswered(true)
   }, [questionCount]);
+
+  useEffect(() => {
+    console.log(userAnswers)
+  }, [userAnswers]);
 
   const handleNextQuestion = () => {
     if (openQuestion.followUpQuestion == undefined) {
       if (questionCount >= formData.length - 1) {
-        setQuestionCount(0);
+        //FORM OVER, HEAD TO DASHBOARD!
+        writeCompletedForm(sessionStorage.currentUserUID, userAnswers, new Date()).then((result) => {
+          if (result) {
+            navigate('/dashboard')
+          }
+        })
       } else {
         setQuestionCount(questionCount + 1);
       }
     } else if (followUpUsed) {
       if (questionCount >= formData.length - 1) {
         setFollowUpUsed(false);
-        setQuestionCount(0);
+        //FORM OVER, HEAD TO DASHBOARD!
+        writeCompletedForm(sessionStorage.currentUserUID, userAnswers, new Date()).then((result) => {
+          if (result) {
+            navigate('/dashboard')
+          }
+        })
       } else {
         setFollowUpUsed(false);
         setQuestionCount(questionCount + 1);
+        setFirstQuestionAnswered(true)
       }
     } else {
       // use followup
-      setOpenQuestion(formData[questionCount].followUpQuestion);
-      setFollowUpUsed(true);
+      if(booleanInput){
+        setOpenQuestion(formData[questionCount].followUpQuestion);
+        setUserAnswers([...userAnswers,{answer: openQuestion.inputType=="bool" ? booleanInput: openQuestion.inputType=="text" ? textInput: dateInput, question:openQuestion.question}])
+        setFollowUpUsed(true);
+      }else{
+        setOpenQuestion(formData[questionCount+1]);
+        setUserAnswers([...userAnswers,{answer: openQuestion.inputType=="bool" ? booleanInput: openQuestion.inputType=="text" ? textInput: dateInput, question:openQuestion.question}])
+        setFollowUpUsed(true);
+      }
+
+
     }
   };
 
@@ -102,6 +142,7 @@ export default function DailyForm() {
                       <input
                         type="time"
                         style={{ marginTop: "30px", fontSize: "2rem" }}
+                        onChange={(e) => setDateInput(e.target.value)}
                       ></input>
                     ) : openQuestion.inputType === "bool" ? (
                       <>
@@ -113,6 +154,8 @@ export default function DailyForm() {
                             left: "32%",
                             fontSize: "2rem",
                           }}
+                          onClick={() => setBooleanInput(false)}
+
                         >
                           No
                         </Button>
@@ -124,6 +167,8 @@ export default function DailyForm() {
                             right: "32%",
                             fontSize: "2rem",
                           }}
+                          onClick={() => setBooleanInput(true)}
+
                         >
                           Yes
                         </Button>
@@ -137,6 +182,7 @@ export default function DailyForm() {
                             bottom: "25%",
                             fontSize: "2rem",
                           }}
+                          onChange={(e) => setTextInput(e.target.value)}
                         ></TextField>
                       </>
                     ) : (
