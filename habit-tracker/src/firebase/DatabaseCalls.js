@@ -11,8 +11,8 @@ export async function createUser(email, password, username, sex, occupation) {
         .then((userCredential) => {
             // Signed up 
             sessionStorage.setItem('currentUserUID', userCredential.user.uid);
-            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation)
-            result = true
+            writeNewUserData(userCredential.user.email, username, userCredential.user.uid, sex, occupation);
+            result = true;
         })
         .catch((error) => {
             console.log(error.code);
@@ -60,6 +60,11 @@ export async function logged_in(auth, user) {
 export async function get_User() {
     const user = auth.currentUser;
     return user;
+}
+
+export async function get_Username(user){
+    const username = user.userName;
+    return username;
 }
 
 export async function log_Out() {

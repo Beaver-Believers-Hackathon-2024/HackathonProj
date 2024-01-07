@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { get_User_Data} from "../firebase/DatabaseCalls";
 
 import {
