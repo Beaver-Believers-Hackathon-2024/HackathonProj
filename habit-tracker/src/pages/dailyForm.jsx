@@ -23,7 +23,7 @@ export default function DailyForm() {
   const [openQuestion, setOpenQuestion] = useState(formData[questionCount]);
   const [followUpUsed, setFollowUpUsed] = useState(false);
   const [dateInput, setDateInput] = useState("");
-  const [booleanInput, setBooleanInput] = useState('');
+  const [booleanInput, setBooleanInput] = useState("");
   const [textInput, setTextInput] = useState("");
   const [firstQuestionAnswered, setFirstQuestionAnswered] = useState(false);
 
@@ -32,8 +32,7 @@ export default function DailyForm() {
   const userSex = sessionStorage.sex;
   const userOccupation = sessionStorage.occupation;
 
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     // on render remove all not needed questions
@@ -45,71 +44,116 @@ export default function DailyForm() {
         formData.splice(index, 1);
       }
     });
-  }, []);
+  }, [userOccupation, userSex]);
 
   useEffect(() => {
     setFollowUpUsed(false);
     // ADD USER ANSWERS TO ARRAY!
+    console.log("2.2", questionCount);
     if (firstQuestionAnswered) {
-      setUserAnswers([...userAnswers,{answer: openQuestion.inputType=="bool" ? booleanInput : openQuestion.inputType=="text" ? textInput: dateInput, question:openQuestion.question}])
+      setUserAnswers([
+        ...userAnswers,
+        {
+          answer:
+            openQuestion.inputType == "bool"
+              ? booleanInput
+              : openQuestion.inputType == "text"
+                ? textInput
+                : dateInput,
+          question: openQuestion.question,
+        },
+      ]);
     }
     setOpenQuestion(formData[questionCount]);
-    setFirstQuestionAnswered(true)
+    setFirstQuestionAnswered(true);
   }, [questionCount]);
 
   useEffect(() => {
-    console.log(userAnswers)
+    console.log(userAnswers);
   }, [userAnswers]);
 
   const handleNextQuestion = () => {
     if (openQuestion.followUpQuestion == undefined) {
+      console.log(1);
       if (questionCount >= formData.length - 1) {
         //FORM OVER, HEAD TO DASHBOARD!
-        writeCompletedForm(sessionStorage.currentUserUID, userAnswers, new Date()).then((result) => {
+        writeCompletedForm(
+          sessionStorage.currentUserUID,
+          userAnswers,
+          new Date(),
+        ).then((result) => {
           if (result) {
-            navigate('/dashboard')
+            navigate("/dashboard");
           }
-        })
+        });
       } else {
         setQuestionCount(questionCount + 1);
       }
     } else if (followUpUsed) {
+      console.log(2);
       if (questionCount >= formData.length - 1) {
+        console.log(2.1);
         setFollowUpUsed(false);
         //FORM OVER, HEAD TO DASHBOARD!
-        writeCompletedForm(sessionStorage.currentUserUID, userAnswers, new Date()).then((result) => {
+        writeCompletedForm(
+          sessionStorage.currentUserUID,
+          userAnswers,
+          new Date(),
+        ).then((result) => {
           if (result) {
-            navigate('/dashboard')
+            navigate("/dashboard");
           }
-        })
+        });
       } else {
-        setFollowUpUsed(false);
+        console.log(2.2, "question count", questionCount);
         setQuestionCount(questionCount + 1);
-        setFirstQuestionAnswered(true)
+        setFirstQuestionAnswered(true);
+        setFollowUpUsed(false);
       }
     } else {
+      console.log(3);
       // use followup
-      if(booleanInput){
+      if (booleanInput) {
         setOpenQuestion(formData[questionCount].followUpQuestion);
-        setUserAnswers([...userAnswers,{answer: openQuestion.inputType=="bool" ? booleanInput: openQuestion.inputType=="text" ? textInput: dateInput, question:openQuestion.question}])
+        setUserAnswers([
+          ...userAnswers,
+          {
+            answer:
+              openQuestion.inputType == "bool"
+                ? booleanInput
+                : openQuestion.inputType == "text"
+                  ? textInput
+                  : dateInput,
+            question: openQuestion.question,
+          },
+        ]);
         setFollowUpUsed(true);
-      }else{
-        setOpenQuestion(formData[questionCount+1]);
-        setUserAnswers([...userAnswers,{answer: openQuestion.inputType=="bool" ? booleanInput: openQuestion.inputType=="text" ? textInput: dateInput, question:openQuestion.question}])
+      } else {
+        setQuestionCount(questionCount + 1);
+        setUserAnswers([
+          ...userAnswers,
+          {
+            answer:
+              openQuestion.inputType == "bool"
+                ? booleanInput
+                : openQuestion.inputType == "text"
+                  ? textInput
+                  : dateInput,
+            question: openQuestion.question,
+          },
+        ]);
         setFollowUpUsed(true);
       }
-
-
     }
   };
 
-  const handlePreviousQuestion = () => {
-    if (questionCount > 0) {
-      setQuestionCount(questionCount - 1);
-    } else {
-      setQuestionCount(formData.length - 1);
-    }
-  };
+  //   const handlePreviousQuestion = () => {
+  //     if (questionCount > 0) {
+  //       setQuestionCount(questionCount - 1);
+  //     } else {
+  //       setQuestionCount(formData.length - 1);
+  //     }
+  //   };
 
   return (
     <>
@@ -155,7 +199,6 @@ export default function DailyForm() {
                             fontSize: "2rem",
                           }}
                           onClick={() => setBooleanInput(false)}
-
                         >
                           No
                         </Button>
@@ -168,7 +211,6 @@ export default function DailyForm() {
                             fontSize: "2rem",
                           }}
                           onClick={() => setBooleanInput(true)}
-
                         >
                           Yes
                         </Button>
