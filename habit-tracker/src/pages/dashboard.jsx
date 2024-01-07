@@ -6,6 +6,7 @@ import FadeIn from "react-fade-in";
 
 export default function dashboard() {
   const [formData, setFormData] = useState(null);
+  const [username, setUsername] = useState(sessionStorage.username);
 
   const headerStyle = {
     display: "inline-flex",
@@ -32,6 +33,7 @@ export default function dashboard() {
       if (result !== undefined) {
         console.log("result ", result);
         setFormData(result);
+        setUsername(sessionStorage.username);
       }
     });
   }, []);
@@ -59,11 +61,7 @@ export default function dashboard() {
 
         <div className="greetings" style={greetingsStyle}>
           <Typography variant="h2">
-            Hello,{" "}
-            {sessionStorage.username !== undefined
-              ? sessionStorage.username
-              : "User"}
-            .
+            Hello, {username !== undefined ? username : "User"}.
           </Typography>
           <Typography variant="body1">Let's review your day.</Typography>
         </div>
