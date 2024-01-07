@@ -45,6 +45,13 @@ const formQuestions = [
         question: 'Did you get anytime to yourself today for hobbies or some relaxation?',
         followUpQuestion: { inputType: 'text', question: 'Nice, what did you get up to?' }
     },
+    {
+        questionOrder: 6,
+        userType: 'All',
+        sex: 'All',
+        inputType: 'slider',
+        question: 'Please rate your day on a scale of 1-10'
+    },
 ]
 
 export default formQuestions;

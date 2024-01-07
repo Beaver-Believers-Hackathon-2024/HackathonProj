@@ -10,6 +10,7 @@ import {
   Grid,
   Button,
   TextField,
+  Slider,
 } from "@mui/material";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import ArrowForward from "@mui/icons-material/ArrowForward";
@@ -25,7 +26,6 @@ export default function DailyForm() {
   const [dateInput, setDateInput] = useState("");
   const [booleanInput, setBooleanInput] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [firstQuestionAnswered, setFirstQuestionAnswered] = useState(false);
 
   const [userAnswers, setUserAnswers] = useState([]);
 
@@ -44,28 +44,16 @@ export default function DailyForm() {
         formData.splice(index, 1);
       }
     });
-  }, [userOccupation, userSex]);
+  }, []);
 
   useEffect(() => {
-    setFollowUpUsed(false);
-    // ADD USER ANSWERS TO ARRAY!
-    console.log("2.2", questionCount);
-    if (firstQuestionAnswered) {
-      setUserAnswers([
-        ...userAnswers,
-        {
-          answer:
-            openQuestion.inputType == "bool"
-              ? booleanInput
-              : openQuestion.inputType == "text"
-                ? textInput
-                : dateInput,
-          question: openQuestion.question,
-        },
-      ]);
+    if (questionCount > 0) {
+      setFollowUpUsed(false);
+      setOpenQuestion(formData[questionCount]);
     }
-    setOpenQuestion(formData[questionCount]);
-    setFirstQuestionAnswered(true);
+    if (openQuestion.inputType === "slider") {
+      setTextInput("5"); // Set the initial value for the slider (e.g., 5)
+    }
   }, [questionCount]);
 
   useEffect(() => {
@@ -73,87 +61,83 @@ export default function DailyForm() {
   }, [userAnswers]);
 
   const handleNextQuestion = () => {
-    if (openQuestion.followUpQuestion == undefined) {
-      console.log(1);
-      if (questionCount >= formData.length - 1) {
-        //FORM OVER, HEAD TO DASHBOARD!
-        writeCompletedForm(
-          sessionStorage.currentUserUID,
-          userAnswers,
-          new Date(),
-        ).then((result) => {
-          if (result) {
-            navigate("/dashboard");
-          }
-        });
-      } else {
-        setQuestionCount(questionCount + 1);
-      }
-    } else if (followUpUsed) {
-      console.log(2);
-      if (questionCount >= formData.length - 1) {
-        console.log(2.1);
-        setFollowUpUsed(false);
-        //FORM OVER, HEAD TO DASHBOARD!
-        writeCompletedForm(
-          sessionStorage.currentUserUID,
-          userAnswers,
-          new Date(),
-        ).then((result) => {
-          if (result) {
-            navigate("/dashboard");
-          }
-        });
-      } else {
-        console.log(2.2, "question count", questionCount);
-        setQuestionCount(questionCount + 1);
-        setFirstQuestionAnswered(true);
-        setFollowUpUsed(false);
-      }
-    } else {
-      console.log(3);
-      // use followup
-      if (booleanInput) {
-        setOpenQuestion(formData[questionCount].followUpQuestion);
-        setUserAnswers([
-          ...userAnswers,
-          {
-            answer:
-              openQuestion.inputType == "bool"
-                ? booleanInput
-                : openQuestion.inputType == "text"
-                  ? textInput
-                  : dateInput,
-            question: openQuestion.question,
-          },
-        ]);
-        setFollowUpUsed(true);
-      } else {
-        setQuestionCount(questionCount + 1);
-        setUserAnswers([
-          ...userAnswers,
-          {
-            answer:
-              openQuestion.inputType == "bool"
-                ? booleanInput
-                : openQuestion.inputType == "text"
-                  ? textInput
-                  : dateInput,
-            question: openQuestion.question,
-          },
-        ]);
-        setFollowUpUsed(true);
-      }
-    }
+    setUserAnswers([
+      ...userAnswers,
+      {
+        answer:
+          openQuestion.inputType == "bool"
+            ? booleanInput
+            : openQuestion.inputType == "text"
+              ? textInput
+              : openQuestion.inputType == "slider"
+                ? textInput
+                : dateInput,
+        question: openQuestion.question,
+      },
+    ]);
   };
 
-  //   const handlePreviousQuestion = () => {
-  //     if (questionCount > 0) {
-  //       setQuestionCount(questionCount - 1);
-  //     } else {
-  //       setQuestionCount(formData.length - 1);
-  //     }
-  //   };
+  useEffect(() => {
+    if (userAnswers.length > 0) {
+      if (openQuestion.followUpQuestion == undefined) {
+        console.log(1);
+        if (questionCount >= formData.length - 1) {
+          //FORM OVER, HEAD TO DASHBOARD!
+          console.log("answers", userAnswers);
+          writeCompletedForm(
+            sessionStorage.currentUserUID,
+            userAnswers,
+            new Date(),
+          ).then((result) => {
+            if (result) {
+              navigate("/dashboard");
+            }
+          });
+        } else {
+          setQuestionCount(questionCount + 1);
+        }
+      } else if (followUpUsed) {
+        if (questionCount >= formData.length - 1) {
+          setFollowUpUsed(false);
+          //FORM OVER, HEAD TO DASHBOARD!
+          writeCompletedForm(
+            sessionStorage.currentUserUID,
+            userAnswers,
+            new Date(),
+          ).then((result) => {
+            if (result) {
+              navigate("/dashboard");
+            }
+          });
+        } else {
+          setQuestionCount(questionCount + 1);
+          setFollowUpUsed(false);
+        }
+      } else {
+        // use followup
+        if (booleanInput) {
+          setOpenQuestion(formData[questionCount].followUpQuestion);
+          setFollowUpUsed(true);
+        } else {
+          if (questionCount >= formData.length - 1) {
+            //FORM OVER, HEAD TO DASHBOARD!
+            writeCompletedForm(
+              sessionStorage.currentUserUID,
+              userAnswers,
+              new Date(),
+            ).then((result) => {
+              if (result) {
+                navigate("/dashboard");
+              }
+            });
+          } else {
+            setQuestionCount(questionCount + 1);
+            setFollowUpUsed(true);
+          }
+        }
+      }
+    }
+  }, [userAnswers]);
 
   return (
     <>
@@ -227,6 +211,24 @@ export default function DailyForm() {
                           onChange={(e) => setTextInput(e.target.value)}
                         ></TextField>
                       </>
+                    ) : openQuestion.inputType === "slider" ? (
+                      <>
+                        <Slider
+                          value={parseInt(textInput, 10) || 0}
+                          onChange={(e, value) =>
+                            setTextInput(value.toString())
+                          }
+                          min={1}
+                          max={10}
+                          step={1}
+                          style={{ width: "80%", marginTop: "30px" }}
+                        />
+                        <Typography
+                          sx={{ fontSize: "2rem", marginTop: "10px" }}
+                        >
+                          {textInput}
+                        </Typography>
+                      </>
                     ) : (
                       ""
                     )}
@@ -244,15 +246,8 @@ export default function DailyForm() {
                     >
                       <Button
                         size="small"
-                        onClick={() => handlePreviousQuestion()}
-                        sx={{ fontSize: "2rem" }}
-                      >
-                        <ArrowBack />
-                      </Button>
-                      <Button
-                        size="small"
                         onClick={() => handleNextQuestion()}
-                        sx={{ fontSize: "2rem" }}
+                        sx={{ fontSize: "2rem", margin: "0 auto" }}
                       >
                         <ArrowForward />
                       </Button>
