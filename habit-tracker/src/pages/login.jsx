@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import { Typography, Divider, Link, Grid, TextField, Button, SvgIcon } from "@mui/material";
-import GoogleIcon from '@mui/icons-material/Google';
+import { useState } from "react";
+import {Typography, Divider, Link, Grid, TextField, Button} from "@mui/material";
+import {createUser} from '../firebase/DatabaseCalls'
+import { auth } from '../firebase/FirebaseConfig'
 
 // db function calls
 
